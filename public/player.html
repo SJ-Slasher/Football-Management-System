@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Dashboard - Futsal Arena</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="#" class="navbar-brand">
+                    <div class="navbar-brand-icon">FA</div>
+                    Futsal Arena
+                </a>
+                
+                <ul class="navbar-nav">
+                    <li><a href="#book" class="active" data-section="booking">Book Court</a></li>
+                    <li><a href="#bookings" data-section="my-bookings">My Bookings</a></li>
+                </ul>
+                
+                <div class="navbar-user">
+                    <div class="user-info">
+                        <span class="user-name" id="user-name">Player</span>
+                        <span class="user-role">Player Account</span>
+                    </div>
+                    <div class="user-avatar" id="user-avatar">P</div>
+                    <button class="btn btn-ghost btn-sm" id="logout-btn">Sign Out</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Booking Section -->
+        <section id="booking-section">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-header-content">
+                    <h1>Book a Court</h1>
+                    <p>Select your preferred court, date, and time slots to make a booking</p>
+                </div>
+            </div>
+            
+            <!-- Booking Steps -->
+            <div class="booking-steps">
+                <div class="booking-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <span class="step-label">Select Court</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="booking-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <span class="step-label">Pick Date</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="booking-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <span class="step-label">Choose Time</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="booking-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <span class="step-label">Confirm</span>
+                </div>
+            </div>
+            
+            <!-- Step 1: Court Selection -->
+            <div class="booking-step-content active" id="step-1-content">
+                <h3 class="mb-2">Available Courts</h3>
+                <div class="courts-grid" id="courts-grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                
+                <div class="mt-3 text-right">
+                    <button class="btn btn-primary" id="next-to-step-2" disabled>
+                        Continue to Date Selection
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Date Selection -->
+            <div class="booking-step-content" id="step-2-content" style="display: none;">
+                <div class="date-picker-section">
+                    <h3>Select Booking Date</h3>
+                    <p class="text-muted mb-2">Choose a date for your booking</p>
+                    
+                    <div class="date-picker-grid" id="date-picker-grid">
+                        <!-- Dates will be generated here -->
+                    </div>
+                </div>
+                
+                <div class="mt-3 flex justify-between">
+                    <button class="btn btn-secondary" id="back-to-step-1">Back</button>
+                    <button class="btn btn-primary" id="next-to-step-3" disabled>
+                        Continue to Time Selection
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Time Selection -->
+            <div class="booking-step-content" id="step-3-content" style="display: none;">
+                <div class="time-slots-section">
+                    <div class="time-slots-header">
+                        <div>
+                            <h3>Select Time Slots</h3>
+                            <p class="text-muted">Click on available slots to select them</p>
+                        </div>
+                        <div class="time-slots-legend">
+                            <div class="legend-item">
+                                <div class="legend-dot available"></div>
+                                <span>Available</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot selected"></div>
+                                <span>Selected</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot unavailable"></div>
+                                <span>Booked</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slots-grid" id="time-slots-grid">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="selected-slots-info" id="selected-slots-container" style="display: none;">
+                        <div class="selected-slots-header">
+                            <h4>Selected Time Slots</h4>
+                            <span class="selected-slots-count" id="selected-count">0 slots selected</span>
+                        </div>
+                        <div class="selected-slots-list" id="selected-slots-list">
+                            <!-- Selected slots will appear here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-3 flex justify-between">
+                    <button class="btn btn-secondary" id="back-to-step-2">Back</button>
+                    <button class="btn btn-primary" id="next-to-step-4" disabled>
+                        Continue to Confirmation
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Confirmation -->
+            <div class="booking-step-content" id="step-4-content" style="display: none;">
+                <div class="grid-2">
+                    <div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Booking Summary</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="booking-summary">
+                                    <div class="summary-row">
+                                        <span class="summary-label">Court</span>
+                                        <span class="summary-value" id="summary-court">-</span>
+                                    </div>
+                                    <div class="summary-row">
+                                        <span class="summary-label">Date</span>
+                                        <span class="summary-value" id="summary-date">-</span>
+                                    </div>
+                                    <div class="summary-row">
+                                        <span class="summary-label">Time Slots</span>
+                                        <span class="summary-value" id="summary-slots">-</span>
+                                    </div>
+                                    <div class="summary-row">
+                                        <span class="summary-label">Duration</span>
+                                        <span class="summary-value" id="summary-duration">-</span>
+                                    </div>
+                                    <div class="summary-row">
+                                        <span class="summary-label">Price per Hour</span>
+                                        <span class="summary-value" id="summary-price-per-hour">-</span>
+                                    </div>
+                                    <div class="summary-row total">
+                                        <span class="summary-label">Total Amount</span>
+                                        <span class="summary-value" id="summary-total">$0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Additional Information</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="booking-notes">Notes (Optional)</label>
+                                    <textarea id="booking-notes" rows="4" placeholder="Any special requests or information..."></textarea>
+                                </div>
+                                
+                                <div class="message message-info">
+                                    <span class="message-icon">i</span>
+                                    <span>Your booking will be confirmed immediately after submission.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-3 flex justify-between">
+                    <button class="btn btn-secondary" id="back-to-step-3">Back</button>
+                    <button class="btn btn-success btn-lg" id="confirm-booking">
+                        Confirm Booking
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- My Bookings Section -->
+        <section id="my-bookings-section" style="display: none;">
+            <div class="page-header">
+                <div class="page-header-content">
+                    <h1>My Bookings</h1>
+                    <p>View and manage all your court reservations</p>
+                </div>
+                <div class="page-header-actions">
+                    <button class="btn btn-primary" id="new-booking-btn">New Booking</button>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <div class="quick-stat-icon" style="color: var(--primary);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="quick-stat-value" id="total-bookings">0</div>
+                        <div class="quick-stat-label">Total Bookings</div>
+                    </div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-icon" style="color: var(--success);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="quick-stat-value" id="confirmed-bookings">0</div>
+                        <div class="quick-stat-label">Confirmed</div>
+                    </div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-icon" style="color: var(--warning);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="quick-stat-value" id="upcoming-bookings">0</div>
+                        <div class="quick-stat-label">Upcoming</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="filter-status">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Court</label>
+                    <select id="filter-court">
+                        <option value="">All Courts</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Bookings Table -->
+            <div class="card">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Court</th>
+                                <th>Date</th>
+                                <th>Time Slots</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-table-body">
+                            <tr>
+                                <td colspan="7" class="text-center text-muted" style="padding: 3rem;">
+                                    Loading bookings...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="success-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Booking Confirmed</h3>
+                <button class="modal-close" id="close-success-modal">&times;</button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="empty-state-icon" style="background: var(--success-light); color: var(--success); margin-bottom: 1rem;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h3>Your booking has been confirmed!</h3>
+                <p class="mt-1">You will receive a confirmation email shortly. Check your bookings for more details.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="view-bookings-btn">View Bookings</button>
+                <button class="btn btn-primary" id="new-booking-modal-btn">New Booking</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cancel Confirmation Modal -->
+    <div class="modal-overlay" id="cancel-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Cancel Booking</h3>
+                <button class="modal-close" id="close-cancel-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel this booking? This action cannot be undone.</p>
+                <input type="hidden" id="cancel-booking-id">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-modal-close">Keep Booking</button>
+                <button class="btn btn-danger" id="confirm-cancel-btn">Cancel Booking</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/player.js"></script>
+</body>
+</html>

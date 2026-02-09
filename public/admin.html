@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Futsal Arena</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="#" class="navbar-brand">
+                    <div class="navbar-brand-icon">FA</div>
+                    Futsal Arena
+                </a>
+                
+                <ul class="navbar-nav">
+                    <li><a href="#dashboard" class="active" data-section="dashboard">Dashboard</a></li>
+                    <li><a href="#bookings" data-section="bookings">Bookings</a></li>
+                    <li><a href="#courts" data-section="courts">Courts</a></li>
+                    <li><a href="#users" data-section="users">Users</a></li>
+                </ul>
+                
+                <div class="navbar-user">
+                    <div class="user-info">
+                        <span class="user-name" id="admin-name">Admin</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                    <div class="user-avatar" id="admin-avatar">A</div>
+                    <button class="btn btn-ghost btn-sm" id="logout-btn">Sign Out</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <section id="dashboard-section">
+            <div class="page-header">
+                <div class="page-header-content">
+                    <h1>Dashboard</h1>
+                    <p>Overview of your futsal arena management</p>
+                </div>
+                <div class="page-header-actions">
+                    <button class="btn btn-secondary" id="refresh-stats">Refresh</button>
+                    <button class="btn btn-primary" id="add-booking-btn">Add Booking</button>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon primary">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </div>
+                        <span class="stat-change positive">+12%</span>
+                    </div>
+                    <div class="stat-value" id="stat-total-bookings">0</div>
+                    <div class="stat-label">Total Bookings</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon success">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <span class="stat-change positive">+8%</span>
+                    </div>
+                    <div class="stat-value" id="stat-total-revenue">$0</div>
+                    <div class="stat-label">Total Revenue</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon warning">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="stat-total-users">0</div>
+                    <div class="stat-label">Registered Users</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon info">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="stat-active-courts">0</div>
+                    <div class="stat-label">Active Courts</div>
+                </div>
+            </div>
+            
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3 class="card-title">Court Availability Today</h3>
+                </div>
+                <div class="card-body">
+                    <div id="court-availability-grid" class="availability-grid">
+                        <p class="text-muted text-center">Loading availability...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Bookings</h3>
+                    <a href="#bookings" class="btn btn-ghost btn-sm" data-section="bookings">View All</a>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Player</th>
+                                <th>Court</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-bookings-table">
+                            <tr>
+                                <td colspan="6" class="text-center text-muted" style="padding: 2rem;">
+                                    Loading...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <section id="bookings-section" style="display: none;">
+            <div class="page-header">
+                <div class="page-header-content">
+                    <h1>Manage Bookings</h1>
+                    <p>View and manage all court reservations</p>
+                </div>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="booking-filter-status">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="paid">Paid</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Court</label>
+                    <select id="booking-filter-court">
+                        <option value="">All Courts</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Date</label>
+                    <input type="date" id="booking-filter-date">
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Player</th>
+                                <th>Court</th>
+                                <th>Date</th>
+                                <th>Time Slots</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all-bookings-table">
+                            <tr>
+                                <td colspan="8" class="text-center text-muted" style="padding: 2rem;">
+                                    Loading bookings...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <section id="courts-section" style="display: none;">
+            <div class="page-header">
+                <div class="page-header-content">
+                    <h1>Manage Courts</h1>
+                    <p>Add, edit, and manage your futsal courts</p>
+                </div>
+                <div class="page-header-actions">
+                    <button class="btn btn-primary" id="add-court-btn">Add Court</button>
+                </div>
+            </div>
+            
+            <div class="courts-grid" id="admin-courts-grid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="users-section" style="display: none;">
+            <div class="page-header">
+                <div class="page-header-content">
+                    <h1>Manage Users</h1>
+                    <p>View and manage registered users</p>
+                </div>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Role</label>
+                    <select id="user-filter-role">
+                        <option value="">All Roles</option>
+                        <option value="player">Player</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Search</label>
+                    <input type="text" id="user-search" placeholder="Search by name or email...">
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                                <th>Bookings</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table">
+                            <tr>
+                                <td colspan="8" class="text-center text-muted" style="padding: 2rem;">
+                                    Loading users...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div class="modal-overlay" id="court-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="court-modal-title">Add New Court</h3>
+                <button class="modal-close" id="close-court-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="court-form">
+                    <input type="hidden" id="court-id">
+                    <div class="form-group">
+                        <label for="court-name">Court Name</label>
+                        <input type="text" id="court-name" placeholder="e.g., Court A" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="court-description">Description</label>
+                        <textarea id="court-description" rows="3" placeholder="Describe the court..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="court-price">Price per Hour ($)</label>
+                            <input type="number" id="court-price" step="0.01" min="0" placeholder="50.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="court-status">Status</label>
+                            <select id="court-status">
+                                <option value="active">Active</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-court-modal">Cancel</button>
+                <button class="btn btn-primary" id="save-court-btn">Save Court</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="status-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Update Booking Status</h3>
+                <button class="modal-close" id="close-status-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="status-booking-id">
+                <div class="form-group">
+                    <label for="new-status">New Status</label>
+                    <select id="new-status">
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="paid">Paid</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-status-modal">Cancel</button>
+                <button class="btn btn-primary" id="update-status-btn">Update Status</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="role-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Update User Role</h3>
+                <button class="modal-close" id="close-role-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="role-user-id">
+                <p class="mb-2">Change role for: <strong id="role-user-name"></strong></p>
+                <div class="form-group">
+                    <label for="new-role">New Role</label>
+                    <select id="new-role">
+                        <option value="player">Player</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-role-modal">Cancel</button>
+                <button class="btn btn-primary" id="update-role-btn">Update Role</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/admin.js"></script>
+</body>
+</html>
